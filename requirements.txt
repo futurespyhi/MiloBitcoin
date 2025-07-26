@@ -1,0 +1,22 @@
+# Bitcoin数据收集
+requests>=2.31.0
+asyncio
+
+# AI/ML核心
+torch>=2.0.0
+transformers>=4.35.0
+unsloth[colab-new] @ git+https://github.com/unslothai/unsloth.git
+peft>=0.7.0
+
+# RAG系统
+langchain>=0.1.0
+langchain-community>=0.0.10
+chromadb>=0.4.0
+sentence-transformers>=2.2.0
+
+# 数据处理
+pandas>=2.0.0
+numpy>=1.24.0
+
+# 开发工具
+python-dotenv>=1.0.0
