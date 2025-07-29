@@ -1,0 +1,81 @@
+name: milo_bitcoin
+channels:
+  - pytorch      # 优先使用pytorch官方channel确保GPU版本
+  - nvidia       # NVIDIA官方channel，CUDA支持
+  - conda-forge  # 其他包的主要来源
+  # 注意：不包含defaults，避免版本冲突
+
+dependencies:
+  - python=3.10
+  
+  # PyTorch GPU版本 (明确指定pytorch channel，确保GPU版本)
+  - pytorch::pytorch>=2.0.0
+  - pytorch::torchvision  
+  - pytorch::torchaudio
+  - pytorch::pytorch-cuda=12.1  # 明确CUDA版本
+  
+  # 基础科学计算
+  - numpy=1.24.*
+  - pandas=2.0.*
+  - scipy
+  - scikit-learn
+  
+  # 数据可视化
+  - matplotlib=3.7.*
+  - seaborn=0.12.*
+  
+  # 网络和工具
+  - requests=2.31.*
+  - tqdm=4.65.*
+  - python-dateutil=2.8.*
+  
+  # FAISS GPU版本 (通过conda安装更稳定)
+  - faiss-gpu>=1.7.0  # 支持可用的版本范围
+  
+  # 开发工具
+  - jupyter
+  - ipykernel
+  - git
+  
+  # pip包 (在conda安装完成后安装)
+  - pip
+  - pip:
+    # AI/ML核心包
+    - transformers>=4.35.0
+    - peft>=0.7.0
+    - sentence-transformers>=2.2.0
+    - accelerate>=0.24.0
+    - bitsandbytes>=0.41.0
+    
+    # Unsloth相关 (分开安装更可靠)
+    - "unsloth[colab-new] @ git+https://github.com/unslothai/unsloth.git"
+    - unsloth_zoo  # 显式包含依赖
+    
+    # RAG系统
+    - langchain>=0.1.0
+    - langchain-community>=0.0.10
+    - chromadb>=0.4.0
+    # faiss-gpu通过conda安装，不在pip中重复
+    
+    # MCP相关
+    - anthropic
+    - python-dotenv>=1.0.0
+    
+    # Web框架
+    - streamlit>=1.28.0
+    - gradio>=4.0.0
+    - fastapi>=0.104.0
+    - uvicorn>=0.24.0
+    
+    # 数据可视化增强
+    - plotly>=5.17.0
+    
+    # GPU监控工具
+    - gpustat
+    - py3nvml
+
+# 安装后验证脚本 (作为注释保留)
+# conda activate milo_bitcoin
+# python -c "import torch; print(f'CUDA: {torch.cuda.is_available()}')"
+# python -c "import unsloth; print('✅ Unsloth成功')"
+# python -c "import transformers, langchain; print('✅ AI包成功')"

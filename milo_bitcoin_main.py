@@ -26,9 +26,9 @@ class BitcoinDataCollector:
     """专门收集Bitcoin相关数据"""
     
     def __init__(self):
-        self.coingecko_api = "https://api.coingecko.com/api/v3"
-        self.blockchain_info_api = "https://api.blockchain.info/stats"
-        self.fear_greed_api = "https://api.alternative.me/fng/"
+        self.bitcoin_mcp = BitcoinMCPClient()
+        self.coingecko_mcp = CoinGeckoMCPClient()
+        self.feargreed_mcp = FearGreedMCPClient()
         self.news_api_key = os.getenv('NEWS_API_KEY')
         
     async def get_bitcoin_price_data(self) -> Dict:

@@ -1,6 +1,10 @@
+# Milo_Bitcoin Project .gitignore
+
 # Environment variables
 .env
 *.env
+.env.local
+.env.production
 
 # Python
 __pycache__/
@@ -23,28 +27,92 @@ wheels/
 *.egg-info/
 .installed.cfg
 *.egg
+MANIFEST
+
+# Virtual environments
+venv/
+env/
+ENV/
+.venv/
 
 # Jupyter Notebooks
 .ipynb_checkpoints
+*.ipynb
 
-# PyTorch
+# PyTorch models and checkpoints
 *.pth
 *.pt
+*.ckpt
+models/
+checkpoints/
+saved_models/
+
+# Unsloth cache (编译缓存)
+unsloth_compiled_cache/
+
+# HuggingFace cache
+.cache/
+transformers_cache/
+huggingface_cache/
+
+# Data files
+data/raw/
+data/processed/
+*.csv
+*.json
+*.parquet
+*.h5
+*.hdf5
+
+# Logs
+logs/
+*.log
+wandb/
+
+# Model outputs
+outputs/
+results/
+
+# Temporary files
+tmp/
+temp/
+.tmp/
 
 # IDE
 .vscode/
 .idea/
 *.swp
 *.swo
+*~
 
 # MacOS
 .DS_Store
+.AppleDouble
+.LSOverride
 
-# Model files
-models/
-*.bin
-*.safetensors
+# Windows
+Thumbs.db
+ehthumbs.db
+Desktop.ini
 
-# Logs
-logs/
-*.log
+# API keys and secrets (double protection)
+*api_key*
+*secret*
+*token*
+keys/
+secrets/
+
+# Large files that shouldn't be in Git
+*.zip
+*.tar.gz
+*.7z
+*.rar
+
+# Database files
+*.db
+*.sqlite
+*.sqlite3
+
+# Local configuration
+config_local.py
+local_settings.py
