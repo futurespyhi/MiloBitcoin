@@ -1,6 +1,6 @@
 # Milo_Bitcoin 🐱₿
 
-> The first conversational Bitcoin analysis assistant powered by RAG + Fine-tuned LLM - Featuring Milo, the smartest crypto cat on the internet!
+> A conversational Bitcoin analysis assistant powered by RAG + Fine-tuned LLM - Featuring Milo, the smartest crypto cat on the internet!
 
 **Author**: Norton Gu | University of Rochester '25  
 **Status**: 🔨 In Development (Milo is studying the blockchain!)  
