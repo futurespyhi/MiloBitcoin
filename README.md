@@ -41,11 +41,15 @@ Building the world's first **conversational Bitcoin assistant** that combines:
 
 ```bash
 # Clone the repository
-git clone https://github.com/your-username/Milo_Bitcoin.git
+git clone https://github.com/futurespyhi/Milo_Bitcoin.git
 cd Milo_Bitcoin
 
 # Install dependencies
-pip install -r requirements.txt
+conda env create -f environment.yml
+conda activate milo_bitcoin
+
+# OR using pip directly
+# pip install -r requirements.txt
 
 # Set up environment variables
 export NEWS_API_KEY="your_news_api_key"
@@ -85,7 +89,7 @@ python milo_bitcoin_main.py
 ## 🧠 AI Features
 
 ### Fine-tuning Strategy
-- **Base Model**: Qwen2.5-7B-Instruct (selected for finance understanding)
+- **Base Model**: Qwen2.5-VL-7B-Instruct (selected for finance understanding)
 - **Method**: LoRA with Unsloth (efficient and cost-effective)
 - **Training Data**: Bitcoin educational Q&A, risk-aware responses
 - **Focus**: Education, risk awareness, conversational ability
@@ -98,25 +102,25 @@ python milo_bitcoin_main.py
 
 ## 📈 Development Roadmap
 
-### Week 1: Data Foundation 🏗️
+### Stage 1: Data Foundation 🏗️
 - [x] Project architecture design
 - [ ] Bitcoin data pipeline (CoinGecko, Blockchain.info)
 - [ ] Basic RAG system implementation
 - [ ] Real-time data integration
 
-### Week 2: AI Intelligence 🧠
+### Stage 2: AI Intelligence 🧠
 - [ ] Bitcoin knowledge base creation
 - [ ] LLM fine-tuning with Unsloth
 - [ ] Advanced conversation capabilities
 - [ ] Risk-aware response system
 
-### Week 3: User Experience 🎨
+### Stage 3: User Experience 🎨
 - [ ] Streamlit/Gradio interface
 - [ ] Real-time chat functionality
 - [ ] Data visualization dashboard
 - [ ] Mobile-friendly design
 
-### Week 4: Production & Community 🚀
+### Stage 4: Production & Community 🚀
 - [ ] Performance optimization
 - [ ] Docker deployment
 - [ ] Community feedback integration

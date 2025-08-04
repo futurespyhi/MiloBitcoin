@@ -132,12 +132,12 @@ class BitcoinRAGSystem:
     def load_bitcoin_knowledge(self):
         """加载Bitcoin基础知识库"""
         knowledge_sources = [
-            "Bitcoin Whitepaper by Satoshi Nakamoto",
-            "Technical analysis indicators for Bitcoin",
-            "Bitcoin halving events and market cycles", 
-            "Lightning Network and layer 2 solutions",
-            "Bitcoin mining and hash rate fundamentals",
-            "DeFi and Bitcoin ecosystem development"
+            "Bitcoin Whitepaper by Satoshi Nakamoto", # 比特币白皮书
+            "Technical analysis indicators for Bitcoin", # 比特币技术分析指标
+            "Bitcoin halving events and market cycles", # 比特币减半事件和市场周期
+            "Lightning Network and layer 2 solutions", # 闪电网络和第二层解决方案
+            "Bitcoin mining and hash rate fundamentals", # 比特币挖矿和哈希率基础知识
+            "DeFi and Bitcoin ecosystem development" # 去中心化金融和比特币生态系统发展
         ]
         
         print("📚 Milo is loading Bitcoin knowledge base...")
@@ -332,7 +332,7 @@ if __name__ == "__main__":
     asyncio.run(main())
 
 # Milo's Bitcoin Development Roadmap 🎯
-# Week 1: Bitcoin data pipeline + Basic RAG (Milo learns Bitcoin!)
-# Week 2: LLM fine-tuning + Advanced analysis (Milo becomes Bitcoin expert!)  
-# Week 3: Frontend + Real-time features (Milo gets a beautiful interface!)
-# Week 4: Deployment + Community feedback (Milo goes live on the internet!)
+# Stage 1: Bitcoin data pipeline + Basic RAG (Milo learns Bitcoin!)
+# Stage 2: LLM fine-tuning + Advanced analysis (Milo becomes Bitcoin expert!)  
+# Stage 3: Frontend + Real-time features (Milo gets a beautiful interface!)
+# Stage 4: Deployment + Community feedback (Milo goes live on the internet!)

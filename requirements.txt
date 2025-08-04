@@ -1,41 +1,62 @@
-# Bitcoin数据收集
-requests>=2.31.0
+# Milo Bitcoin - pip-only version
+# 与 environment.yml 保持一致的纯 pip 安装版本
 
-# MCP相关依赖
-anthropic-mcp>=0.5.0
-mcp>=1.0.0
+# Python基础科学计算
+numpy==1.24.*
+pandas==2.0.*
+scipy
+scikit-learn
 
-# AI/ML核心
-torch>=2.0.0
+# 数据可视化
+matplotlib==3.7.*
+seaborn==0.12.*
+
+# 网络和工具
+requests==2.31.*
+tqdm==4.65.*
+python-dateutil==2.8.*
+
+# PyTorch GPU版本 (CUDA 12.1)
+torch>=2.0.0+cu121
+torchvision+cu121
+torchaudio+cu121
+--extra-index-url https://download.pytorch.org/whl/cu121
+
+# FAISS GPU版本
+faiss-gpu>=1.7.0
+
+# AI/ML核心包
 transformers>=4.35.0
-unsloth[colab-new] @ git+https://github.com/unslothai/unsloth.git
 peft>=0.7.0
+sentence-transformers>=2.2.0
+accelerate>=0.24.0
+bitsandbytes>=0.41.0
+
+# Unsloth相关
+"unsloth[colab-new] @ git+https://github.com/unslothai/unsloth.git"
 
 # RAG系统
 langchain>=0.1.0
 langchain-community>=0.0.10
 chromadb>=0.4.0
-sentence-transformers>=2.2.0
-faiss-cpu>=1.7.4
 
-# 数据处理
-pandas>=2.0.0
-numpy>=1.24.0
-
-# 开发工具
+# MCP相关
+anthropic
 python-dotenv>=1.0.0
 
-# Web框架（用于部署）
+# Web框架
 streamlit>=1.28.0
 gradio>=4.0.0
 fastapi>=0.104.0
 uvicorn>=0.24.0
 
-# 数据可视化
-matplotlib>=3.7.0
+# 数据可视化增强
 plotly>=5.17.0
-seaborn>=0.12.0
 
-# 其他工具
-tqdm>=4.65.0
-python-dateutil>=2.8.2
+# GPU监控工具 (在CPU环境中可选)
+gpustat
+py3nvml
+
+# 开发工具依赖
+jupyter
+ipykernel
