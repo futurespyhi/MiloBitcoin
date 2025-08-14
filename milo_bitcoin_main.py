@@ -12,7 +12,7 @@ from dataclasses import dataclass
 
 @dataclass
 class BitcoinMetrics:
-    """Bitcoin核心指标数据结构"""
+    """Bitcoin's core data structure"""
     price: float
     market_cap: float
     volume_24h: float
@@ -23,16 +23,17 @@ class BitcoinMetrics:
     fees_usd: float
 
 class BitcoinDataCollector:
-    """专门收集Bitcoin相关数据"""
+    """Specialized Bitcoin data collector"""
     
     def __init__(self):
-        self.bitcoin_mcp = BitcoinMCPClient()
-        self.coingecko_mcp = CoinGeckoMCPClient()
-        self.feargreed_mcp = FearGreedMCPClient()
+        self.bitcoin_mcp = BitcoinMCPClient() # replace on-chain data
+        self.coingecko_mcp = CoinGeckoMCPClient() # replace price data
+        self.feargreed_mcp = FearGreedMCPClient() # replace the fear and greed index
         self.news_api_key = os.getenv('NEWS_API_KEY')
-        
+    
+    # TODO: Obtain data through the MCP unified interface 
     async def get_bitcoin_price_data(self) -> Dict:
-        """获取Bitcoin价格和市场数据"""
+        """Get Bitcoin price and market data"""
         try:
             url = f"{self.coingecko_api}/simple/price"
             params = {
@@ -48,9 +49,10 @@ class BitcoinDataCollector:
         except Exception as e:
             print(f"❌ Error fetching price data: {e}")
             return {}
-    
+
+    # TODO: Obtain data through the MCP unified interface
     async def get_on_chain_metrics(self) -> Dict:
-        """获取链上数据"""
+        """Get on-chain data"""
         try:
             response = requests.get(self.blockchain_info_api)
             print("⛓️ Milo fetched on-chain metrics")
@@ -59,8 +61,9 @@ class BitcoinDataCollector:
             print(f"❌ Error fetching on-chain data: {e}")
             return {}
     
+    # TODO: Obtain data through MCP unified interface
     async def get_fear_greed_index(self) -> Dict:
-        """获取恐慌贪婪指数"""
+        """Get fear and greedy index"""
         try:
             response = requests.get(f"{self.fear_greed_api}?limit=1")
             print("😰 Milo checked market sentiment")
@@ -70,7 +73,7 @@ class BitcoinDataCollector:
             return {}
     
     async def get_bitcoin_news(self, limit: int = 10) -> List[Dict]:
-        """获取Bitcoin相关新闻"""
+        """Get Bitcoin related news"""
         try:
             if not self.news_api_key:
                 print("⚠️ No News API key found")
@@ -92,18 +95,18 @@ class BitcoinDataCollector:
             return []
     
     async def collect_comprehensive_data(self) -> BitcoinMetrics:
-        """收集综合Bitcoin数据"""
+        """Collect comprehensive Bitcoin data"""
         print("🔄 Milo is collecting comprehensive Bitcoin data...")
         
-        # 并行获取所有数据
+        # Get all data in parallel
         price_data, on_chain_data, sentiment_data, news_data = await asyncio.gather(
-            self.get_bitcoin_price_data(),
-            self.get_on_chain_metrics(),
-            self.get_fear_greed_index(),
+            self.get_bitcoin_price_data(), # CoinGecko MCP Server 
+            self.get_on_chain_metrics(), # Bitcoin & Lightning Network MCP
+            self.get_fear_greed_index(), # Crypto Fear & Greed Index MCP
             self.get_bitcoin_news()
         )
         
-        # 解析数据
+        # Parse the data
         bitcoin_price = price_data.get('bitcoin', {})
         fear_greed = sentiment_data.get('data', [{}])[0] if sentiment_data.get('data') else {}
         
@@ -122,7 +125,7 @@ class BitcoinDataCollector:
         return metrics
 
 class BitcoinRAGSystem:
-    """Bitcoin专用RAG系统"""
+    """Bitcoin's specialized RAG system"""
     
     def __init__(self):
         self.vectorstore = None
@@ -130,14 +133,14 @@ class BitcoinRAGSystem:
         self.bitcoin_knowledge_base = []
         
     def load_bitcoin_knowledge(self):
-        """加载Bitcoin基础知识库"""
+        """Load Bitcoin's knowledge database"""
         knowledge_sources = [
-            "Bitcoin Whitepaper by Satoshi Nakamoto", # 比特币白皮书
-            "Technical analysis indicators for Bitcoin", # 比特币技术分析指标
-            "Bitcoin halving events and market cycles", # 比特币减半事件和市场周期
-            "Lightning Network and layer 2 solutions", # 闪电网络和第二层解决方案
-            "Bitcoin mining and hash rate fundamentals", # 比特币挖矿和哈希率基础知识
-            "DeFi and Bitcoin ecosystem development" # 去中心化金融和比特币生态系统发展
+            "Bitcoin Whitepaper by Satoshi Nakamoto", # Bitcoin white paper
+            "Technical analysis indicators for Bitcoin", # Bitcoin technical analysis indicators
+            "Bitcoin halving events and market cycles", # Bitcoin halving events and market cycles
+            "Lightning Network and layer 2 solutions", # Lightning Network and layer 2 solutions
+            "Bitcoin mining and hash rate fundamentals", # Bitcoin mining and hash rate basics
+            "DeFi and Bitcoin ecosystem development" # Decentralized finance and Bitcoin ecosystem development
         ]
         
         print("📚 Milo is loading Bitcoin knowledge base...")
@@ -145,16 +148,16 @@ class BitcoinRAGSystem:
         return knowledge_sources
         
     def build_knowledge_base(self, documents: List[str]):
-        """构建Bitcoin专用知识库"""
+        """Building a Bitcoin-specific knowledge base"""
         print("🔨 Milo is building Bitcoin knowledge base...")
-        # TODO: 实现向量数据库构建
-        # 将包含：Bitcoin白皮书、技术分析、市场周期、挖矿知识等
+        # TODO: Implement vector database construction
+        # Will include: Bitcoin white paper, technical analysis, market cycle, mining knowledge, etc.
         
     def retrieve_bitcoin_context(self, query: str, metrics: BitcoinMetrics) -> str:
-        """检索Bitcoin相关上下文"""
+        """Retrieve Bitcoin related context"""
         print(f"🔍 Milo is searching Bitcoin knowledge for: {query}")
         
-        # 基于当前数据构建上下文
+        # Build context based on current data
         context = f"""
 Current Bitcoin Data:
 - Price: ${metrics.price:,.2f}
@@ -171,14 +174,14 @@ Market Analysis Context:
         return context
 
 class MiloBitcoinLLM:
-    """Milo的Bitcoin专用LLM系统"""
+    """Milo's Bitcoin-specific LLM system"""
     
     def __init__(self):
-        self.model = None  # TODO: 加载微调后的Bitcoin专用模型
+        self.model = None  # TODO: Load the fine-tuned Bitcoin-specific model
         self.system_prompt = self._create_bitcoin_system_prompt()
         
     def _create_bitcoin_system_prompt(self) -> str:
-        """创建Bitcoin专用系统提示"""
+        """Create Bitcoin-specific system prompt"""
         return """You are Milo 🐱₿, a knowledgeable and friendly Bitcoin analysis cat.
 
 Your expertise includes:
@@ -205,13 +208,13 @@ Remember: You're here to educate and inform, not to encourage reckless investmen
 """
     
     def analyze_bitcoin_query(self, user_query: str, context: str, metrics: BitcoinMetrics) -> str:
-        """分析用户的Bitcoin相关问题"""
+        """Analyze user's Bitcoin-related questions"""
         print("🧠 Milo is analyzing your Bitcoin question...")
         
-        # TODO: 实现LLM推理
-        # 这里将使用微调后的模型结合实时数据和上下文
+        # TODO: Implement LLM inference
+        # Use fine-tuned model to combine real-time data and context
         
-        # 临时回复逻辑
+        # Temporary response logic
         if "price" in user_query.lower():
             return f"""🐱 Current Bitcoin price is ${metrics.price:,.2f}! 
 
@@ -246,7 +249,7 @@ I'm still learning to provide more detailed analysis. What specific aspect of Bi
 *Educational purposes only - not financial advice!*"""
 
 class MiloBitcoinAssistant:
-    """Milo Bitcoin助手主类"""
+    """Milo Bitcoin Assistant Main Class"""
     
     def __init__(self):
         self.data_collector = BitcoinDataCollector()
@@ -256,28 +259,28 @@ class MiloBitcoinAssistant:
         print("🐱₿ Milo Bitcoin Assistant initialized! Ready to talk Bitcoin!")
         
     async def refresh_data(self):
-        """刷新Bitcoin数据"""
+        """Refresh Bitcoin data"""
         print("🔄 Milo is refreshing Bitcoin data...")
         self.current_metrics = await self.data_collector.collect_comprehensive_data()
         
     async def chat(self, user_question: str) -> str:
-        """与用户进行Bitcoin对话"""
+        """Chat with users about Bitcoin"""
         print(f"💬 User: {user_question}")
         
-        # 确保有最新数据
+        # Ensure latest data exists
         if not self.current_metrics:
             await self.refresh_data()
         
-        # 获取相关上下文
+        # Get related context
         context = self.rag_system.retrieve_bitcoin_context(user_question, self.current_metrics)
         
-        # LLM分析和回复
+        # Use LLM to analyze and respond
         response = self.llm.analyze_bitcoin_query(user_question, context, self.current_metrics)
         
         return response
     
     async def get_market_summary(self) -> str:
-        """获取Bitcoin市场摘要"""
+        """Get Bitcoin market summary"""
         print("📊 Milo is preparing Bitcoin market summary...")
         
         if not self.current_metrics:
@@ -298,16 +301,16 @@ class MiloBitcoinAssistant:
         return summary
 
 async def main():
-    """主函数 - Milo Bitcoin Demo"""
+    """Main Function - Milo Bitcoin Demo"""
     print("🚀 Milo Bitcoin is starting...")
     print("🐱₿" + "=" * 50)
     
     milo = MiloBitcoinAssistant()
     
-    # 加载知识库
+    # Load the knowledge database
     milo.rag_system.load_bitcoin_knowledge()
     
-    # Demo功能
+    # Demo functionality
     print("\n📊 Demo: Bitcoin Market Summary")
     summary = await milo.get_market_summary()
     print(summary)

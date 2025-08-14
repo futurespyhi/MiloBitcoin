@@ -47,7 +47,7 @@ models/
 checkpoints/
 saved_models/
 
-# Unsloth cache (编译缓存)
+# Unsloth cache (compilation cache)
 unsloth_compiled_cache/
 
 # HuggingFace cache
@@ -58,6 +58,7 @@ huggingface_cache/
 # Data files
 data/raw/
 data/processed/
+papers/
 *.csv
 *.json
 *.parquet
