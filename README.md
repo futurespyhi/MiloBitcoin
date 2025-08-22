@@ -162,7 +162,7 @@ MIT License - feel free to use this for learning and educational purposes!
 ## 🔗 Connect & Follow
 
 **⭐ Star this repo if Milo helps you understand Bitcoin better!**  
-**🐱 Follow Milo's journey**: [LinkedIn](https://www.linkedin.com/in/norton-gu-322737278/) | [Twitter](your-twitter)
+**🐱 Follow Milo's journey**: [LinkedIn](https://www.linkedin.com/in/norton-gu-322737278/) | [Twitter](https://x.com/bridge_cro_hi)
 
 ---
 

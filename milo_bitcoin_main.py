@@ -10,6 +10,14 @@ import json
 import requests
 from dataclasses import dataclass
 
+# Load environment variables from .env file
+try:
+    from dotenv import load_dotenv
+    load_dotenv()
+    print("📋 Loaded environment variables from .env file")
+except ImportError:
+    print("⚠️ python-dotenv not installed. Using system environment variables only.")
+
 @dataclass
 class BitcoinMetrics:
     """Bitcoin's core data structure"""
@@ -26,14 +34,35 @@ class BitcoinDataCollector:
     """Specialized Bitcoin data collector"""
     
     def __init__(self):
-        self.bitcoin_mcp = BitcoinMCPClient() # replace on-chain data
-        self.coingecko_mcp = CoinGeckoMCPClient() # replace price data
-        self.feargreed_mcp = FearGreedMCPClient() # replace the fear and greed index
+        # API endpoints
+        self.coingecko_api = "https://api.coingecko.com/api/v3"
+        self.blockchain_info_api = "https://api.blockchain.info/stats"
+        self.fear_greed_api = "https://api.alternative.me/fng"
+        
+        # MCP clients (will replace direct API calls later)
+        # self.bitcoin_mcp = BitcoinMCPClient() # replace on-chain data
+        # self.coingecko_mcp = CoinGeckoMCPClient() # replace price data
+        # self.feargreed_mcp = FearGreedMCPClient() # replace the fear and greed index
+        
         self.news_api_key = os.getenv('NEWS_API_KEY')
+        
+        # Request session for connection pooling
+        self.session = requests.Session()
+        self.session.headers.update({
+            'User-Agent': 'Milo-Bitcoin-Assistant/1.0',
+            'Accept': 'application/json'
+        })
+        
+        # Cache for latest data
+        self.latest_news = []
     
-    # TODO: Obtain data through the MCP unified interface 
+    def close(self):
+        """Clean up resources"""
+        if hasattr(self, 'session'):
+            self.session.close()
+    
     async def get_bitcoin_price_data(self) -> Dict:
-        """Get Bitcoin price and market data"""
+        """Get Bitcoin price and market data from CoinGecko"""
         try:
             url = f"{self.coingecko_api}/simple/price"
             params = {
@@ -41,35 +70,114 @@ class BitcoinDataCollector:
                 'vs_currencies': 'usd',
                 'include_market_cap': 'true',
                 'include_24hr_vol': 'true',
-                'include_24hr_change': 'true'
+                'include_24hr_change': 'true',
+                'include_last_updated_at': 'true'
             }
-            response = requests.get(url, params=params)
-            print("📈 Milo fetched Bitcoin price data")
-            return response.json()
+            
+            response = self.session.get(url, params=params, timeout=10)
+            response.raise_for_status()  # Raise exception for bad status codes
+            
+            data = response.json()
+            
+            # Data validation
+            if 'bitcoin' not in data:
+                raise ValueError("Bitcoin data not found in response")
+                
+            bitcoin_data = data['bitcoin']
+            required_fields = ['usd', 'usd_market_cap', 'usd_24h_vol']
+            for field in required_fields:
+                if field not in bitcoin_data:
+                    raise ValueError(f"Required field '{field}' missing from response")
+            
+            print("📈 Milo fetched Bitcoin price data successfully")
+            return data
+            
+        except requests.exceptions.RequestException as e:
+            print(f"❌ Network error fetching price data: {e}")
+            return {}
+        except ValueError as e:
+            print(f"❌ Data validation error: {e}")
+            return {}
         except Exception as e:
-            print(f"❌ Error fetching price data: {e}")
+            print(f"❌ Unexpected error fetching price data: {e}")
             return {}
 
-    # TODO: Obtain data through the MCP unified interface
     async def get_on_chain_metrics(self) -> Dict:
-        """Get on-chain data"""
+        """Get Bitcoin on-chain metrics from Blockchain.info"""
         try:
-            response = requests.get(self.blockchain_info_api)
-            print("⛓️ Milo fetched on-chain metrics")
-            return response.json()
+            # Get basic stats
+            stats_url = self.blockchain_info_api
+            response = self.session.get(stats_url, timeout=10)
+            response.raise_for_status()
+            
+            stats_data = response.json()
+            
+            # Get additional mempool data
+            mempool_url = "https://api.blockchain.info/mempool/fees"
+            mempool_response = self.session.get(mempool_url, timeout=10)
+            mempool_response.raise_for_status()
+            mempool_data = mempool_response.json()
+            
+            # Combine data
+            combined_data = {
+                **stats_data,
+                'mempool_fees': mempool_data
+            }
+            
+            # Data validation
+            required_fields = ['n_tx', 'hash_rate', 'difficulty', 'total_fees_btc']
+            for field in required_fields:
+                if field not in stats_data:
+                    print(f"⚠️ Warning: '{field}' not found in blockchain.info response")
+            
+            print("⛓️ Milo fetched on-chain metrics successfully")
+            return combined_data
+            
+        except requests.exceptions.RequestException as e:
+            print(f"❌ Network error fetching on-chain data: {e}")
+            return {}
+        except ValueError as e:
+            print(f"❌ JSON parsing error: {e}")
+            return {}
         except Exception as e:
-            print(f"❌ Error fetching on-chain data: {e}")
+            print(f"❌ Unexpected error fetching on-chain data: {e}")
             return {}
     
-    # TODO: Obtain data through MCP unified interface
     async def get_fear_greed_index(self) -> Dict:
-        """Get fear and greedy index"""
+        """Get Crypto Fear & Greed Index from Alternative.me"""
         try:
-            response = requests.get(f"{self.fear_greed_api}?limit=1")
-            print("😰 Milo checked market sentiment")
-            return response.json()
+            url = f"{self.fear_greed_api}?limit=1&format=json"
+            response = self.session.get(url, timeout=10)
+            response.raise_for_status()
+            
+            data = response.json()
+            
+            # Data validation
+            if 'data' not in data or not data['data']:
+                raise ValueError("No fear & greed data found in response")
+            
+            fear_greed_data = data['data'][0]
+            required_fields = ['value', 'value_classification', 'timestamp']
+            for field in required_fields:
+                if field not in fear_greed_data:
+                    raise ValueError(f"Required field '{field}' missing from fear & greed response")
+            
+            # Validate value range
+            value = int(fear_greed_data['value'])
+            if not 0 <= value <= 100:
+                raise ValueError(f"Fear & greed value {value} out of valid range (0-100)")
+            
+            print(f"😰 Milo checked market sentiment: {fear_greed_data['value_classification']} ({value}/100)")
+            return data
+            
+        except requests.exceptions.RequestException as e:
+            print(f"❌ Network error fetching fear/greed index: {e}")
+            return {}
+        except ValueError as e:
+            print(f"❌ Data validation error: {e}")
+            return {}
         except Exception as e:
-            print(f"❌ Error fetching fear/greed index: {e}")
+            print(f"❌ Unexpected error fetching fear/greed index: {e}")
             return {}
     
     async def get_bitcoin_news(self, limit: int = 10) -> List[Dict]:
@@ -87,7 +195,7 @@ class BitcoinDataCollector:
                 'sortBy': 'publishedAt',
                 'pageSize': limit
             }
-            response = requests.get(url, params=params)
+            response = self.session.get(url, params=params, timeout=10)
             print(f"🗞️ Milo collected {limit} Bitcoin news articles")
             return response.json().get('articles', [])
         except Exception as e:
@@ -98,31 +206,58 @@ class BitcoinDataCollector:
         """Collect comprehensive Bitcoin data"""
         print("🔄 Milo is collecting comprehensive Bitcoin data...")
         
-        # Get all data in parallel
-        price_data, on_chain_data, sentiment_data, news_data = await asyncio.gather(
-            self.get_bitcoin_price_data(), # CoinGecko MCP Server 
-            self.get_on_chain_metrics(), # Bitcoin & Lightning Network MCP
-            self.get_fear_greed_index(), # Crypto Fear & Greed Index MCP
-            self.get_bitcoin_news()
-        )
-        
-        # Parse the data
-        bitcoin_price = price_data.get('bitcoin', {})
-        fear_greed = sentiment_data.get('data', [{}])[0] if sentiment_data.get('data') else {}
-        
-        metrics = BitcoinMetrics(
-            price=bitcoin_price.get('usd', 0),
-            market_cap=bitcoin_price.get('usd_market_cap', 0),
-            volume_24h=bitcoin_price.get('usd_24h_vol', 0),
-            hash_rate=on_chain_data.get('hash_rate', 0),
-            fear_greed_index=int(fear_greed.get('value', 50)),
-            active_addresses=on_chain_data.get('n_btc_discovered', 0),
-            transaction_count=on_chain_data.get('n_tx', 0),
-            fees_usd=on_chain_data.get('total_fees_btc', 0) * bitcoin_price.get('usd', 0)
-        )
-        
-        print("✅ Milo gathered all Bitcoin data successfully!")
-        return metrics
+        try:
+            # Get all data in parallel
+            price_data, on_chain_data, sentiment_data, news_data = await asyncio.gather(
+                self.get_bitcoin_price_data(), # CoinGecko API
+                self.get_on_chain_metrics(), # Blockchain.info API
+                self.get_fear_greed_index(), # Alternative.me API
+                self.get_bitcoin_news(), # NewsAPI
+                return_exceptions=True  # Don't fail if one API fails
+            )
+            
+            # Check for exceptions in parallel execution
+            for i, result in enumerate([price_data, on_chain_data, sentiment_data, news_data]):
+                if isinstance(result, Exception):
+                    api_names = ['CoinGecko', 'Blockchain.info', 'Fear&Greed', 'NewsAPI']
+                    print(f"⚠️ {api_names[i]} API failed: {result}")
+            
+            # Safe data parsing with defaults
+            bitcoin_price = price_data.get('bitcoin', {}) if isinstance(price_data, dict) else {}
+            fear_greed = (sentiment_data.get('data', [{}])[0] 
+                         if isinstance(sentiment_data, dict) and sentiment_data.get('data') 
+                         else {})
+            
+            # Extract on-chain data safely
+            safe_on_chain = on_chain_data if isinstance(on_chain_data, dict) else {}
+            
+            # Create metrics with fallback values
+            metrics = BitcoinMetrics(
+                price=float(bitcoin_price.get('usd', 0)),
+                market_cap=float(bitcoin_price.get('usd_market_cap', 0)),
+                volume_24h=float(bitcoin_price.get('usd_24h_vol', 0)),
+                hash_rate=float(safe_on_chain.get('hash_rate', 0)),
+                fear_greed_index=int(fear_greed.get('value', 50)),
+                active_addresses=int(safe_on_chain.get('n_btc_discovered', 0)),
+                transaction_count=int(safe_on_chain.get('n_tx', 0)),
+                fees_usd=abs(float(safe_on_chain.get('total_fees_btc', 0))) * float(bitcoin_price.get('usd', 0)) / 100000000  # Convert satoshi to BTC and take absolute value
+            )
+            
+            # Store news data for potential future use
+            self.latest_news = news_data if isinstance(news_data, list) else []
+            
+            print("✅ Milo gathered all Bitcoin data successfully!")
+            print(f"📊 Price: ${metrics.price:,.2f} | Sentiment: {metrics.fear_greed_index}/100 | Txs: {metrics.transaction_count:,}")
+            return metrics
+            
+        except Exception as e:
+            print(f"❌ Critical error in data collection: {e}")
+            # Return default metrics if everything fails
+            return BitcoinMetrics(
+                price=0, market_cap=0, volume_24h=0, hash_rate=0,
+                fear_greed_index=50, active_addresses=0,
+                transaction_count=0, fees_usd=0
+            )
 
 class BitcoinRAGSystem:
     """Bitcoin's specialized RAG system"""
