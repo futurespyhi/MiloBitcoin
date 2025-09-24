@@ -2,9 +2,9 @@
 
 > A conversational Bitcoin analysis assistant powered by RAG + Fine-tuned LLM - Featuring Milo, the smartest crypto cat on the internet!
 
-**Author**: Norton Gu | University of Rochester '25  
-**Status**: 🔨 In Development (Milo is studying the blockchain!)  
-**Tech Stack**: Python, LangChain, Unsloth, RAG, Real-time APIs
+**Author**: Norton Gu | University of Rochester '25
+**Status**: 🔨 In Development (Milo is studying the blockchain!)
+**Tech Stack**: Python, ChromaDB, GPT-OSS-20B, vLLM, LoRA, Real-time APIs
 
 ## 🎯 Project Vision
 
@@ -30,9 +30,9 @@ Building the world's first **conversational Bitcoin assistant** that combines:
 ┌─────────────────────┐    ┌─────────────────┐    ┌──────────────────┐
 │   Bitcoin Data      │───▶│   RAG System    │───▶│  Fine-tuned LLM  │
 │                     │    │                 │    │                  │
-│ • CoinGecko API     │    │ • Bitcoin KB    │    │ • Bitcoin Expert │
-│ • Blockchain.info   │    │ • Vector DB     │    │ • Educational AI │
-│ • Fear/Greed Index  │    │ • Smart Search  │    │ • Risk Aware     │
+│ • CoinGecko API     │    │ • Bitcoin KB    │    │ • GPT-OSS-20B    │
+│ • Blockchain.info   │    │ • ChromaDB      │    │ • LoRA Adapters  │
+│ • Fear/Greed Index  │    │ • Smart Search  │    │ • vLLM Serving   │
 │ • News APIs         │    │ • Real-time     │    │ • Milo's Style   │
 └─────────────────────┘    └─────────────────┘    └──────────────────┘
 ```
@@ -52,8 +52,8 @@ conda activate milo_bitcoin
 # pip install -r requirements.txt
 
 # Set up environment variables
-export NEWS_API_KEY="your_news_api_key"
-export OPENAI_API_KEY="your_openai_key"  # for embeddings
+export OPENAI_API_KEY="your_openai_key"  # for embeddings (optional)
+# Note: Most functionality works without API keys for local inference
 
 # Wake up Milo and start chatting!
 python milo_bitcoin_main.py
@@ -63,68 +63,98 @@ python milo_bitcoin_main.py
 
 ```
 🙋 User: "What's Bitcoin's current price?"
-🐱 Milo: "Current Bitcoin price is $43,247! The market sentiment 
-         is showing 32/100 on Fear & Greed (fearful territory). 
-         Network activity is strong with 285k transactions today! 🐾"
+🐱 Milo: "Current Bitcoin price is $112,148! The market sentiment
+         is showing 43/100 on Fear & Greed (fearful territory).
+         Network activity is strong with 481k transactions today! 🐾"
 
 🙋 User: "Should I buy Bitcoin?"
-🐱 Milo: "I can't give investment advice, but I can help you understand 
-         Bitcoin better! Remember: only invest what you can afford to 
+🐱 Milo: "I can't give investment advice, but I can help you understand
+         Bitcoin better! Remember: only invest what you can afford to
          lose completely. Want me to explain dollar-cost averaging? 🐾"
 
 🙋 User: "Explain Bitcoin halving"
-🐱 Milo: "Bitcoin halving is like reducing the treat supply! Every ~4 years,
-         the reward for mining Bitcoin cuts in half. Next halving: 2028.
-         This typically affects supply and demand dynamics... 🐾"
+🐱 Milo: "Bitcoin halving is like reducing the treat supply! Every ~4 years
+         (precisely every 210,000 blocks), mining rewards are cut in half.
+
+         📚 From Satoshi's design: This controls Bitcoin's inflation rate
+         📊 Historical halvings: 2012 (50→25), 2016 (25→12.5), 2020 (12.5→6.25), 2024 (6.25→3.125)
+         📈 Market impact: Reduced supply often creates upward price pressure
+
+         Current network shows strong fundamentals with high transaction volume! 🐾"
 ```
 
-## 📊 Data Sources
+## 📊 Data Strategy
 
+### RAG Knowledge Base (Authoritative Sources)
+- **Bitcoin Whitepaper**: Satoshi Nakamoto's foundational paper - core concepts and principles
+- **Bitcoin.org Documentation**: Official technical specifications and developer guides
+- **Bitcoin Wiki**: Comprehensive terminology, explanations, and historical context
+- **Academic Research**: Peer-reviewed papers on Bitcoin technology and economics
+
+### Real-time Data Sources
 - **Price Data**: CoinGecko API (real-time pricing and market cap)
 - **On-chain Metrics**: Blockchain.info (hash rate, transactions, fees)
 - **Market Sentiment**: Alternative.me Fear & Greed Index
 - **News Analysis**: NewsAPI (Bitcoin-related articles)
-- **Knowledge Base**: Bitcoin whitepaper, technical docs, educational content
 
-## 🧠 AI Features
+### Fine-tuning Datasets (HuggingFace - tahamajs)
+- **News Analysis**: 49.2k Bitcoin news sentiment analysis samples
+- **Technical Predictions**: 2.46k market analysis and forecasting data
+- **Professional Dialogue**: 2.3k expert-level conversation patterns
+
+**Key Principle**: RAG provides authoritative knowledge foundation, fine-tuning enables professional analysis capabilities.
+
+## 🧠 AI Architecture
 
 ### Fine-tuning Strategy
-- **Base Model**: Qwen2.5-VL-7B-Instruct (selected for finance understanding)
-- **Method**: LoRA with Unsloth (efficient and cost-effective)
-- **Training Data**: Bitcoin educational Q&A, risk-aware responses
-- **Focus**: Education, risk awareness, conversational ability
+- **Base Model**: GPT-OSS-20B (OpenAI's 20B parameter open-source model)
+- **Method**: LoRA fine-tuning for efficient training on dual RTX 5090 setup
+- **Training Data**: HuggingFace Bitcoin datasets (separate from RAG knowledge)
+- **Deployment**: vLLM for optimized inference and API serving
+- **Focus**: Professional analysis, market insights, and conversational ability
 
 ### RAG Implementation
-- **Vector Database**: FAISS/Chroma for Bitcoin knowledge
-- **Embeddings**: OpenAI text-embedding-3-small
-- **Context**: Real-time data + historical knowledge
-- **Retrieval**: Hybrid search (semantic + keyword)
+- **Vector Database**: ChromaDB for local, efficient Bitcoin knowledge storage
+- **Embeddings**: sentence-transformers for privacy-friendly local inference
+- **Knowledge Sources**: Authoritative Bitcoin documentation and research
+- **Retrieval Strategy**: Semantic search with real-time data integration
+- **Context Fusion**: Combines retrieved knowledge with live market data
+
+### Data Separation Philosophy
+```
+RAG Knowledge Base ──────┐
+                         ├──► Enhanced Context ──┐
+Real-time Data ──────────┘                       │
+                                                  ├──► Milo's Response
+Fine-tuned Model ────────────► Professional Analysis ──┘
+```
 
 ## 📈 Development Roadmap
 
-### Stage 1: Data Foundation 🏗️
-- [x] Project architecture design
-- [ ] Bitcoin data pipeline (CoinGecko, Blockchain.info)
-- [ ] Basic RAG system implementation
-- [ ] Real-time data integration
+### Stage 1: RAG Foundation 🏗️
+- [x] Project architecture design and technical planning
+- [ ] Bitcoin knowledge base collection (Bitcoin.org, whitepaper, Wiki)
+- [ ] ChromaDB vector database implementation
+- [ ] RAG system integration with existing Milo framework
+- [ ] Basic Gradio frontend for RAG validation
 
-### Stage 2: AI Intelligence 🧠
-- [ ] Bitcoin knowledge base creation
-- [ ] LLM fine-tuning with Unsloth
-- [ ] Advanced conversation capabilities
-- [ ] Risk-aware response system
+### Stage 2: Model Intelligence 🧠
+- [ ] HuggingFace Bitcoin datasets preparation (tahamajs collections)
+- [ ] GPT-OSS-20B LoRA fine-tuning on dual RTX 5090 setup
+- [ ] vLLM deployment configuration and optimization
+- [ ] RAG + fine-tuned model integration testing
 
-### Stage 3: User Experience 🎨
-- [ ] Streamlit/Gradio interface
-- [ ] Real-time chat functionality
-- [ ] Data visualization dashboard
-- [ ] Mobile-friendly design
+### Stage 3: Production Deployment 🚀
+- [ ] Enhanced Gradio interface with chat history and visualizations
+- [ ] Performance optimization and response time improvement
+- [ ] Docker containerization for consistent deployment
+- [ ] Cloud deployment with scalable infrastructure
 
-### Stage 4: Production & Community 🚀
-- [ ] Performance optimization
-- [ ] Docker deployment
-- [ ] Community feedback integration
-- [ ] Open source contributions
+### Stage 4: Community & Growth 🌟
+- [ ] Open-source community engagement
+- [ ] Educational content creation and tutorials
+- [ ] User feedback integration and feature expansion
+- [ ] Academic collaboration and research publication
 
 ## ⚠️ Important Disclaimers
 
@@ -161,7 +191,7 @@ MIT License - feel free to use this for learning and educational purposes!
 
 ## 🔗 Connect & Follow
 
-**⭐ Star this repo if Milo helps you understand Bitcoin better!**  
+**⭐ Star this repo if Milo helps you understand Bitcoin better!**
 **🐱 Follow Milo's journey**: [LinkedIn](https://www.linkedin.com/in/norton-gu-322737278/) | [Twitter](https://x.com/bridge_cro_hi)
 
 ---
