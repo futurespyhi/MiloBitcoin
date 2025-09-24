@@ -120,3 +120,6 @@ local_settings.py
 
 # developping sessions with claude code
 session_logs/
+
+# Explanation about MiloMusic
+MiloMusic.txt
