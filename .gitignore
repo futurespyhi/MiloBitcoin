@@ -117,3 +117,6 @@ secrets/
 # Local configuration
 config_local.py
 local_settings.py
+
+# developping sessions with claude code
+session_logs/
