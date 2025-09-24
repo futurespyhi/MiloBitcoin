@@ -15,6 +15,11 @@ seaborn==0.12.*
 requests==2.31.*
 tqdm==4.65.*
 python-dateutil==2.8.*
+beautifulsoup4>=4.12.0
+lxml
+
+# Natural Language Processing
+nltk
 
 # PyTorch GPU version (CUDA 12.1)
 torch>=2.0.0+cu121
@@ -40,6 +45,14 @@ langchain>=0.1.0
 langchain-community>=0.0.10
 chromadb>=0.4.0
 
+# PDF and document processing
+PyPDF2>=3.0.0
+pdfplumber>=0.9.0
+
+# Text processing and utilities
+spacy>=3.7.0
+regex>=2023.0.0
+
 # MCP related
 anthropic
 python-dotenv>=1.0.0
@@ -57,6 +70,13 @@ plotly>=5.17.0
 gpustat
 py3nvml
 
+# Additional data processing tools
+python-multipart>=0.0.6
+aiofiles>=23.0.0
+
 # Development tooling dependencies
 jupyter
 ipykernel
+
+# Optional: vLLM for GPT-OSS-20B deployment (install after fine-tuning)
+# --pre vllm==0.10.1+gptoss
