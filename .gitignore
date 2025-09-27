@@ -121,6 +121,19 @@ local_settings.py
 # developping sessions with claude code
 session_logs/
 
+# Legacy environment configurations (backed up during restructuring)
+environment_legacy.yml
+requirements_legacy.txt
+
+# RAG Test Environment - ignore outputs and temporary files
+rag_test/test_outputs/
+rag_test/benchmarks/
+rag_test/test_reports/
+
+# RAG Production Environment - ignore processed data and logs
+rag_data/rag_sources/processed/
+logs/processing/
+
 # Explanation about MiloMusic
 MiloMusic.txt
 prospect.txt

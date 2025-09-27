@@ -1,0 +1,161 @@
+# Milo Bitcoin RAG - Document Processing Configuration
+# 文档处理配置文件
+
+# 基础路径配置
+paths:
+  rag_data: "rag_data"
+  rag_sources: "rag_data/rag_sources"
+  processed_output: "rag_data/rag_sources/processed"
+  test_scripts: "rag_test/test_scripts"
+
+# 输出目录结构
+output_directories:
+  chunks: "rag_data/rag_sources/processed/chunks"
+  embeddings: "rag_data/rag_sources/processed/embeddings"
+  metadata: "rag_data/rag_sources/processed/metadata"
+  logs: "logs/processing"
+
+# 支持的文档格式和处理策略
+supported_formats:
+  PDF:
+    strategy: "granite_docling"
+    processor: "rag_test/test_scripts/granite_docling.py"
+    output_format: "markdown"
+    quality_check: true
+
+  HTML:
+    strategy: "standard_docling"
+    processor: "docling"
+    output_format: "markdown"
+    quality_check: true
+
+  Markdown:
+    strategy: "direct_copy"
+    processor: "copy"
+    output_format: "markdown"
+    quality_check: false
+
+  Text:
+    strategy: "simple_parse"
+    processor: "text_parser"
+    output_format: "markdown"
+    quality_check: false
+
+# 质量检查配置
+quality_control:
+  enabled: true
+  minimum_score: 60.0  # 最低质量分数
+
+  # 质量评估权重
+  score_weights:
+    length: 0.15
+    structure: 0.25
+    relevance: 0.20
+    technical: 0.15
+    format: 0.15
+    duplication: 0.10
+
+  # 关键词列表
+  bitcoin_keywords:
+    - bitcoin
+    - blockchain
+    - cryptocurrency
+    - satoshi
+    - nakamoto
+    - peer-to-peer
+    - cryptographic
+    - hash
+    - mining
+    - transaction
+    - block
+    - network
+    - protocol
+    - consensus
+    - proof-of-work
+    - digital
+    - signature
+    - wallet
+    - lightning
+    - layer-2
+    - payment
+    - channel
+    - node
+
+# 批量处理配置
+batch_processing:
+  # 并发处理数量
+  max_concurrent: 3
+
+  # 处理超时时间 (秒)
+  timeout: 300
+
+  # 重试配置
+  retry_attempts: 2
+  retry_delay: 5
+
+  # 跳过已处理的文件
+  skip_existing: true
+
+  # 详细日志
+  verbose: true
+
+# 文件命名配置
+file_naming:
+  # 输出文件名格式
+  output_pattern: "{filename}_processed_{timestamp}.md"
+
+  # 时间戳格式
+  timestamp_format: "%Y%m%d_%H%M%S"
+
+  # 元数据文件后缀
+  metadata_suffix: "_metadata.json"
+
+  # 日志文件后缀
+  log_suffix: "_processing.log"
+
+# 文档分类配置
+document_categories:
+  authoritative:
+    priority: 1
+    subdirs:
+      - whitepaper
+      - bitcoin_org
+      - bitcoin_wiki
+
+  supplementary:
+    priority: 2
+    subdirs:
+      - academic_papers
+      - bips
+      - community_docs
+
+# 日志配置
+logging:
+  level: "INFO"  # DEBUG, INFO, WARNING, ERROR
+  format: "%(asctime)s - %(name)s - %(levelname)s - %(message)s"
+  file_rotation: true
+  max_file_size: "10MB"
+  backup_count: 5
+
+# 性能配置
+performance:
+  # 内存限制 (MB)
+  memory_limit: 4096
+
+  # 大文件阈值 (MB)
+  large_file_threshold: 50
+
+  # 缓存配置
+  enable_cache: true
+  cache_size: 100
+
+# 错误处理配置
+error_handling:
+  # 出错时是否继续处理其他文件
+  continue_on_error: true
+
+  # 错误文件输出目录
+  error_output_dir: "logs/errors"
+
+  # 保存错误详情
+  save_error_details: true

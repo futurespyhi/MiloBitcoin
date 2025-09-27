@@ -1,0 +1,105 @@
+name: milo_rag
+channels:
+  - pytorch      # Use official PyTorch channel for GPU version
+  - nvidia       # Official NVIDIA channel for CUDA support
+  - conda-forge
+  - defaults
+
+dependencies:
+  - python=3.10
+
+  # PyTorch GPU version (same as main environment for consistency)
+  - pytorch::pytorch>=2.0.0
+  - pytorch::torchvision
+  - pytorch::torchaudio
+  - pytorch::pytorch-cuda=12.1  # Match main environment CUDA version
+
+  # Basic scientific computing for document processing
+  - numpy
+  - pandas
+  - scipy
+  - scikit-learn
+
+  # Data visualization
+  - matplotlib=3.7.*
+  - seaborn=0.12.*
+
+  # Network utilities
+  - requests
+  - tqdm
+  - python-dateutil=2.8.*
+  - beautifulsoup4>=4.12.0
+  - lxml
+
+  # Natural Language Processing
+  - nltk
+
+  # Essential development tools
+  - pip
+  - jupyter
+  - ipykernel
+  - git
+
+  # pip packages for Stage 1 RAG system
+  - pip:
+    # Core Docling package (Granite document processing)
+    - docling>=2.0.0
+
+    # Document processing utilities
+    - PyPDF2>=3.0.0
+    - pdfplumber>=0.9.0
+
+    # AI/ML packages (compatible versions for Docling)
+    - transformers>=4.35.0
+    - accelerate>=0.24.0
+    - sentence-transformers>=2.2.0
+    - peft>=0.7.0
+
+    # RAG system components
+    - langchain>=0.1.0
+    - langchain-community>=0.0.10
+    - chromadb>=0.4.0
+
+    # Text processing and utilities
+    - regex>=2023.0.0
+    - spacy>=3.7.0
+
+    # MCP related
+    - anthropic
+    - python-dotenv>=1.0.0
+
+    # Web frameworks for Stage 1 validation
+    - streamlit>=1.28.0
+    - gradio>=4.0.0
+    - fastapi>=0.104.0
+    - uvicorn>=0.24.0
+
+    # Enhanced data visualization
+    - plotly>=5.17.0
+
+    # GPU monitoring (to verify GPU usage)
+    - gpustat
+    - py3nvml
+
+    # Additional data processing tools
+    - python-multipart>=0.0.6
+    - aiofiles>=23.0.0
+
+# Stage 1 RAG System Environment - Complete Setup
+#
+# Usage:
+# conda env create -f environment_docling.yml
+# conda activate milo_rag
+#
+# Verification commands:
+# python -c "import torch; print(f'CUDA available: {torch.cuda.is_available()}')"
+# python -c "from docling.document_converter import DocumentConverter; print('✅ Docling with GPU ready\!')"
+# python -c "import chromadb, langchain; print('✅ RAG components ready\!')"
+# python -m spacy download en_core_web_sm  # Download English model for spaCy
+#
+# This environment supports:
+# - Granite Docling for advanced PDF processing
+# - ChromaDB vector database for RAG
+# - LangChain for RAG orchestration
+# - Gradio/Streamlit for validation interfaces
+# - Complete Bitcoin knowledge base processing pipeline
