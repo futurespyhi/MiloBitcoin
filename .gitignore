@@ -118,6 +118,9 @@ secrets/
 config_local.py
 local_settings.py
 
+# ignore the quality analysis of finetuning datasets
+finetuning_datasets_analysis/
+
 # developping sessions with claude code
 session_logs/
 
