@@ -273,7 +273,7 @@ Fine-tuned Model ────────────► Professional Analysis �
 - [ ] HuggingFace Bitcoin datasets collection (tahamajs)
 - [ ] Dataset preprocessing and quality validation
 - [ ] GPT-OSS-20B LoRA fine-tuning preparation
-- [ ] Training pipeline setup for dual RTX 5090
+- [ ] Training pipeline setup on RTX 5090
 - [ ] vLLM deployment configuration and optimization
 
 ### Stage 3: System Integration 🔗
