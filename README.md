@@ -5,6 +5,7 @@
 **Author**: Norton Gu | University of Rochester '25
 **Status**: 🔨 In Development (Milo is studying the blockchain!)
 **Tech Stack**: Python, ChromaDB, GPT-OSS-20B, vLLM, LoRA, Real-time APIs
+**Hardware**: Local RTX 4070 (development) + Remote RTX 5090 (training)
 
 ## 🎯 Project Vision
 
@@ -213,9 +214,10 @@ python milo_bitcoin_main.py
 ### Performance Metrics
 - **Data Quality**: 99%+ validated professional samples
 - **JSON Format Consistency**: 100% structured output
-- **Training Efficiency**: ~12-15 hours on RTX 5090
-- **Inference Speed**: <2 seconds per analysis
-- **Memory Requirements**: 20-25GB VRAM (4-bit quantization)
+- **Training Efficiency**: ~12-15 hours on remote RTX 5090
+- **Inference Speed**: <2 seconds per analysis (remote RTX 5090)
+- **Memory Requirements**: 20-25GB VRAM (4-bit quantization, requires RTX 5090)
+- **Development Environment**: Local RTX 4070 (8GB VRAM) for RAG development and testing
 
 ### Integration Capabilities
 - **API Format**: RESTful JSON endpoints
@@ -227,7 +229,7 @@ python milo_bitcoin_main.py
 
 ### Fine-tuning Strategy
 - **Base Model**: GPT-OSS-20B (OpenAI's 20B parameter open-source model)
-- **Method**: LoRA fine-tuning for efficient training on dual RTX 5090 setup
+- **Method**: LoRA fine-tuning on remote RTX 5090 (24GB VRAM required)
 - **Training Data**: HuggingFace Bitcoin datasets (separate from RAG knowledge)
 - **Deployment**: vLLM for optimized inference and API serving
 - **Focus**: Professional analysis, market insights, and conversational ability
@@ -273,7 +275,7 @@ Fine-tuned Model ────────────► Professional Analysis �
 - [ ] HuggingFace Bitcoin datasets collection (tahamajs)
 - [ ] Dataset preprocessing and quality validation
 - [ ] GPT-OSS-20B LoRA fine-tuning preparation
-- [ ] Training pipeline setup on RTX 5090
+- [ ] Training pipeline setup on single RTX 5090
 - [ ] vLLM deployment configuration and optimization
 
 ### Stage 3: System Integration 🔗
