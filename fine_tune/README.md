@@ -39,7 +39,7 @@ fine_tune/
 ├── data_preparation/           # 数据预处理
 │   ├── download_datasets.py    # 下载HuggingFace数据集
 │   ├── data_formatter.py       # 统一数据格式
-│   └── data_mixer.py           # 85%-10%-5%数据混合
+│   └── data_mixer.py           # 90%-7%-3%数据混合
 ├── training_scripts/           # 训练脚本
 │   ├── unsloth_trainer.py      # 主训练脚本
 │   ├── config.yaml             # 训练配置
@@ -101,9 +101,10 @@ Memory: 32.6GB
 ```bash
 # ✅ 数据集已下载并预处理完成
 # final_data/ 目录包含:
-# - train.jsonl: 18,719样本 (72.8MB)
-# - validation.jsonl: 2,335样本 (9.1MB)
-# - test.jsonl: 1,095样本 (4.1MB)
+# - train.jsonl: 6,239样本 (85% train split)
+# - validation.jsonl: 734样本 (10% validation split)
+# - test.jsonl: 368样本 (5% test split)
+# - Total: 7,341样本
 ```
 
 ### 5. 微调训练 (✅ 已完成)
@@ -128,9 +129,9 @@ python training_scripts/simple_trainer.py
 2. **bitcoin-sllm-instruct_v2**: 4,290样本 (99.9%高质量)
 
 ### 数据混合比例
-- **85% Bitcoin专业数据**: 5,610样本 - 核心专业能力
-- **10% 数学推理数据**: 660样本 - 计算能力保持
-- **5% 逻辑推理数据**: 330样本 - 基础推理能力
+- **90% Bitcoin专业数据**: 6,607样本 - 核心专业能力
+- **7% 数学推理数据**: 514样本 - 计算能力保持
+- **3% 逻辑推理数据**: 220样本 - 基础推理能力
 
 ### 目标输出格式
 ```json
@@ -238,7 +239,7 @@ pip install "unsloth[colab-new] @ git+https://github.com/unslothai/unsloth.git"
 1. ✅ 目录结构创建完成
 2. ✅ PyTorch sm_120兼容性验证 (CUDA 12.8 + RTX 5090)
 3. ✅ 训练环境配置完成 (pyproject.toml修复)
-4. ✅ 数据集下载和预处理 (18,719训练样本)
+4. ✅ 数据集下载和预处理 (7,341总样本: 6,239训练 + 734验证 + 368测试)
 5. ✅ GPT-OSS-20B LoRA微调训练 (122MB权重)
 6. ✅ 训练监控和检查点保存
 

@@ -35,7 +35,7 @@ Milo_Bitcoin/
 ├── fine_tune/                  # ✅ LLM Fine-tuning Module (Python 3.11)
 │   ├── checkpoints/            # ✅ 122MB LoRA weights saved
 │   ├── training_scripts/       # ✅ simple_trainer.py (1.65h training completed)
-│   ├── final_data/            # ✅ 18,719 training samples + 2,335 validation samples
+│   ├── final_data/            # ✅ 7,341 samples (6,239 train + 734 val + 368 test)
 │   └── pyproject.toml         # ✅ unsloth 2025.9.9 + pytorch 2.8.0+cu128
 │
 ├── rag_test/                   # ✅ RAG Knowledge System (Python 3.10)
@@ -227,7 +227,8 @@ python milo_bitcoin_main.py
 - **Base Model**: GPT-OSS-20B (OpenAI's 20B parameter open-source model)
 - **Method**: ✅ LoRA fine-tuning completed (RTX 5090 32GB VRAM)
 - **Training Results**: 1.65 hours training, 122MB LoRA weights
-- **Training Data**: 18,719 training samples + 2,335 validation samples (HuggingFace)
+- **Training Data**: 7,341 samples total - 6,239 train + 734 validation + 368 test (HuggingFace)
+- **Model Release**: 🤗 [HugMilo/milo-bitcoin-gpt-oss-20b-lora-v1](https://huggingface.co/HugMilo/milo-bitcoin-gpt-oss-20b-lora-v1)
 - **Deployment**: 🔄 vLLM configuration in progress (optimized inference and API serving)
 - **Focus**: Professional analysis, market insights, and conversational ability
 
@@ -255,7 +256,7 @@ Fine-tuned Model ────────────► Professional Analysis �
 - [x] Document quality assessment framework (86.8-88.5/100 scores)
 - [x] **Modular architecture implementation** (fine_tune/ + rag_test/ + [planned]vllm/)
 - [x] **GPT-OSS-20B LoRA fine-tuning completed** (1.65 hours, 122MB weights)
-- [x] **Training data processing completed** (18,719 training samples + 2,335 validation samples)
+- [x] **Training data processing completed** (7,341 total samples with 90-7-3 Bitcoin/Math/Logic mix)
 - [x] **pyproject.toml environment configuration fixed** (independent dependency management for both modules)
 
 ### 🔄 Current Development Status

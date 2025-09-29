@@ -147,3 +147,6 @@ remote_updates/
 
 # ignore backup files
 *.backup
+
+# ignore files uploaded to huggingface
+fine_tune/hf_upload
