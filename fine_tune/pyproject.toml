@@ -1,0 +1,145 @@
+[project]
+name = "milo-bitcoin-finetuning"
+version = "0.1.0"
+description = "Bitcoin quantitative analysis fine-tuning with Unsloth on RTX 5090"
+readme = "../README.md"
+requires-python = ">=3.11,<3.14"
+authors = [
+    {name = "Norton Gu", email = "zgu17@rochester.edu"},
+]
+keywords = ["bitcoin", "quantitative", "fine-tuning", "unsloth", "rtx5090", "llm"]
+
+dependencies = [
+    # ========================================
+    # FINE-TUNING CORE (基于实际成功版本)
+    # ========================================
+    "unsloth>=2025.9.9",              # 实际使用版本
+    "unsloth-zoo>=2025.9.12",         # 实际使用版本
+
+    # PyTorch生态 (CUDA 12.8 - 实际工作版本)
+    "torch>=2.8.0",                   # 实际: 2.8.0+cu128
+    "torchvision>=0.23.0",            # 实际: 0.23.0+cu128
+    "torchao>=0.13.0",                # 实际安装的优化包
+    "transformers>=4.56.2",           # 实际: 4.56.2
+
+    # LoRA和微调工具 (实际工作版本)
+    "peft>=0.17.1",                   # 实际: 0.17.1
+    "trl>=0.18.1",                    # 保持兼容
+    "accelerate>=1.10.1",             # 实际: 1.10.1
+    "bitsandbytes>=0.47.0",           # 实际: 0.47.0
+
+    # ========================================
+    # 数据处理 (实际工作版本)
+    # ========================================
+    "datasets>=3.6.0",               # 实际: 3.6.0
+    "pandas>=2.3.0",                 # 保持
+    "numpy>=2.2.0",                  # 实际环境兼容
+    "pyarrow>=20.0.0",               # 实际环境兼容
+
+    # ========================================
+    # 训练监控和日志 (实际工作版本)
+    # ========================================
+    "wandb>=0.22.0",                  # 实际: 0.22.0
+    "tensorboard>=2.15.0",            # 备用监控
+    "tqdm>=4.67.1",                   # 实际: 4.67.1
+    "rich>=14.1.0",                   # 实际: 14.1.0
+
+    # ========================================
+    # Jupyter环境 (实际安装的版本)
+    # ========================================
+    "jupyter>=1.1.0",                # 基础jupyter
+    "ipykernel>=6.29.0",              # 内核支持
+    "jupyterlab>=4.4.9",              # 实际: 4.4.9
+    "ipywidgets>=8.1.7",              # 实际: 8.1.7
+
+    # ========================================
+    # 可视化和分析
+    # ========================================
+    "matplotlib>=3.7.0",              # 可视化
+    "seaborn>=0.13.2",                # 实际: 0.13.2
+
+    # ========================================
+    # 实用工具 (实际环境版本)
+    # ========================================
+    "python-dotenv>=1.1.0",           # 环境变量
+    "click>=8.3.0",                   # 实际: 8.3.0
+    "pyyaml>=6.0.0",                  # 配置文件
+    "requests>=2.32.0",               # HTTP请求
+    "huggingface-hub>=0.35.1",        # 实际: 0.35.1
+
+    # 特殊优化包 (实际环境中存在)
+    "cut-cross-entropy>=25.1.1",      # 实际: 25.1.1 (unsloth优化)
+]
+
+[project.optional-dependencies]
+# 开发工具
+dev = [
+    "pytest>=8.0.0",
+    "black>=25.0.0",
+    "isort>=5.13.0",
+    "mypy>=1.8.0",
+    "pre-commit>=3.0.0",
+]
+
+# 模型导出工具
+export = [
+    "onnx>=1.16.0",
+    "onnxruntime-gpu>=1.17.0",
+]
+
+[build-system]
+requires = ["hatchling"]
+build-backend = "hatchling.build"
+
+# 告诉hatchling这不是一个可安装的包，只是依赖管理
+[tool.hatch.build.targets.wheel]
+packages = []  # 空包列表，表示这是脚本项目
+include = [     # 明确指定要包含的文件
+    "data_preparation/",
+    "training_scripts/",
+    "model_export/",
+    "configs/",
+    "README.md"
+]
+
+# ========================================
+# RTX 5090 (sm_120) 专用PyTorch配置
+# ========================================
+[[tool.uv.index]]
+name = "pytorch-cu128"
+url = "https://download.pytorch.org/whl/cu128"
+explicit = true
+
+[tool.uv.sources]
+# 使用CUDA 12.8版本支持sm_120 (实际工作配置)
+torch = { index = "pytorch-cu128" }
+torchvision = { index = "pytorch-cu128" }
+
+# ========================================
+# 安装说明和配置
+# ========================================
+[tool.install-guide]
+working-setup = """
+基于实际成功环境的配置:
+
+实际工作的包版本:
+- unsloth: 2025.9.9
+- torch: 2.8.0+cu128
+- transformers: 4.56.2
+- peft: 0.17.1
+- bitsandbytes: 0.47.0
+- accelerate: 1.10.1
+
+安装步骤:
+1. 备份当前环境:
+   cp pyproject.toml pyproject_original.toml
+   cp pyproject_working.toml pyproject.toml
+
+2. 重新安装:
+   uv sync
+
+3. 验证核心包:
+   python -c "import unsloth; print('✅ Unsloth:', unsloth.__version__)"
+   python -c "import torch; print('✅ PyTorch:', torch.__version__)"
+   python -c "import transformers; print('✅ Transformers:', transformers.__version__)"
+"""

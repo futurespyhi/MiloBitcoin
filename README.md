@@ -3,9 +3,9 @@
 > A professional Bitcoin quantitative analysis assistant powered by fine-tuned GPT-OSS-20B - Featuring Milo, the smartest crypto analyst cat for professional traders! 🐱📊
 
 **Author**: Norton Gu | University of Rochester '25
-**Status**: 🔨 In Development (Milo is studying the blockchain!)
+**Status**: 🎯 Advanced Development (Fine-tuning completed, RAG integration in progress)
 **Tech Stack**: Python, ChromaDB, GPT-OSS-20B, vLLM, LoRA, Real-time APIs
-**Hardware**: Local RTX 4070 (development) + Remote RTX 5090 (training)
+**Hardware**: RTX 5090 (32GB VRAM) - Modular development environment
 
 ## 🎯 Project Vision
 
@@ -28,45 +28,34 @@ Building the world's first **AI-powered Bitcoin quantitative analyst** that comb
 
 ## 🛠️ Technical Architecture
 
-### 🏗️ Parallel Development Architecture
+### 🏗️ Modular Architecture (Implemented)
 
 ```
-┌─────────────────────┐    ┌─────────────────────┐
-│   Track A: RAG      │    │   Track B: LLM      │
-│   Knowledge System  │    │   Intelligence      │
-│                     │    │                     │
-│ Data Sources:       │    │ Data Sources:       │
-│ • Bitcoin PDFs ✅   │    │ • HuggingFace       │
-│ • Academic Papers ✅│    │   Datasets          │
-│ • Bitcoin.org       │    │ • News Analysis     │
-│ • Wiki Content      │    │ • Market Data       │
-│                     │    │ • Expert Dialogue   │
-│ Processing:         │    │                     │
-│ • Granite Docling ✅│    │ Training:           │
-│ • Document Chunking │    │ • GPT-OSS-20B      │
-│ • ChromaDB          │    │ • LoRA Fine-tuning │
-│ • Embeddings        │    │ • vLLM Serving     │
-└─────────────────────┘    └─────────────────────┘
-            │                          │
-            └──────────┬─────────────────┘
-                       ▼
-         ┌─────────────────────────┐
-         │    Integration Layer    │
-         │                         │
-         │ • Context Fusion        │
-         │ • Response Generation   │
-         │ • Real-time Data        │
-         │ • Milo Personality      │
-         └─────────────────────────┘
-                       │
-                       ▼
-            ┌─────────────────────┐
-            │   User Interface    │
-            │                     │
-            │ • Gradio Frontend   │
-            │ • Chat Interface    │
-            │ • Visualizations    │
-            └─────────────────────┘
+Milo_Bitcoin/
+├── fine_tune/                  # ✅ LLM Fine-tuning Module (Python 3.11)
+│   ├── checkpoints/            # ✅ 122MB LoRA weights saved
+│   ├── training_scripts/       # ✅ simple_trainer.py (1.65h training completed)
+│   ├── final_data/            # ✅ 18,719 training samples + 2,335 validation samples
+│   └── pyproject.toml         # ✅ unsloth 2025.9.9 + pytorch 2.8.0+cu128
+│
+├── rag_test/                   # ✅ RAG Knowledge System (Python 3.10)
+│   ├── test_outputs/          # ✅ granite-docling processing completed
+│   ├── test_reports/          # ✅ document quality assessment (86.8-88.5 scores)
+│   └── pyproject.toml         # ✅ docling + granite + embedding
+│
+└── [planned] vllm/            # 🔄 Inference Service Module
+    ├── model_server.py        # 🔄 vLLM inference API
+    ├── integration/           # 🔄 module integration
+    └── deployment/            # 🔄 production deployment config
+```
+
+### 🔗 Module Collaboration Flow
+```
+fine_tune/checkpoints/ (122MB LoRA) ──┐
+                                       ├──► vllm/ (inference service)
+rag_test/processed_docs/ (knowledge base) ────┘         │
+                                                         ▼
+                                            Unified JSON analysis output
 ```
 
 ### 🎯 Independent Development Benefits
@@ -109,16 +98,23 @@ Integration Layer ───┤
 git clone https://github.com/futurespyhi/Milo_Bitcoin.git
 cd Milo_Bitcoin
 
-# Install dependencies
-conda env create -f environment.yml
-conda activate milo_bitcoin
+# Modular installation (each module has independent environment)
+# 1. Install Fine-tune module dependencies
+cd fine_tune
+source .venv/bin/activate
+uv sync  # Install fine-tuning dependencies (unsloth + pytorch + transformers)
 
-# OR using pip directly
-# pip install -r requirements.txt
+# 2. Install RAG module dependencies
+cd ../rag_test
+source .venv/bin/activate
+uv sync  # Install RAG dependencies (granite-docling + embedding)
 
-# Set up environment variables
-export OPENAI_API_KEY="your_openai_key"  # for embeddings (optional)
-# Note: Most functionality works without API keys for local inference
+# 3. [Future] Inference service module
+# cd ../vllm && uv sync
+
+# Set up environment variables (optional)
+export OPENAI_API_KEY="your_openai_key"  # for embeddings if needed
+# Note: Most functionality uses local inference, no API keys required
 
 # Wake up Milo and start chatting!
 python milo_bitcoin_main.py
@@ -214,10 +210,10 @@ python milo_bitcoin_main.py
 ### Performance Metrics
 - **Data Quality**: 99%+ validated professional samples
 - **JSON Format Consistency**: 100% structured output
-- **Training Efficiency**: ~12-15 hours on remote RTX 5090
-- **Inference Speed**: <2 seconds per analysis (remote RTX 5090)
-- **Memory Requirements**: 20-25GB VRAM (4-bit quantization, requires RTX 5090)
-- **Development Environment**: Local RTX 4070 (8GB VRAM) for RAG development and testing
+- **Training Efficiency**: ✅ 1.65 hours on RTX 5090 (7x faster than expected!)
+- **Inference Speed**: <2 seconds per analysis (RTX 5090)
+- **Model Size**: 122MB LoRA weights (vs base model ~20GB, 99.4% compression)
+- **Memory Requirements**: RTX 5090 32GB VRAM fully sufficient
 
 ### Integration Capabilities
 - **API Format**: RESTful JSON endpoints
@@ -227,11 +223,12 @@ python milo_bitcoin_main.py
 
 ## 🧠 AI Architecture
 
-### Fine-tuning Strategy
+### Fine-tuning Strategy (✅ Completed)
 - **Base Model**: GPT-OSS-20B (OpenAI's 20B parameter open-source model)
-- **Method**: LoRA fine-tuning on remote RTX 5090 (24GB VRAM required)
-- **Training Data**: HuggingFace Bitcoin datasets (separate from RAG knowledge)
-- **Deployment**: vLLM for optimized inference and API serving
+- **Method**: ✅ LoRA fine-tuning completed (RTX 5090 32GB VRAM)
+- **Training Results**: 1.65 hours training, 122MB LoRA weights
+- **Training Data**: 18,719 training samples + 2,335 validation samples (HuggingFace)
+- **Deployment**: 🔄 vLLM configuration in progress (optimized inference and API serving)
 - **Focus**: Professional analysis, market insights, and conversational ability
 
 ### RAG Implementation
@@ -252,31 +249,34 @@ Fine-tuned Model ────────────► Professional Analysis �
 
 ## 📈 Development Roadmap
 
-### ✅ Current Progress (2025-09-27)
+### ✅ Major Progress Update (2025-09-29)
 - [x] Project architecture design and technical planning
 - [x] PDF document processing pipeline (granite_docling integration)
-- [x] Single-GPU batch processing system for sequential PDF processing
-- [x] Document quality assessment framework with automatic scoring
-- [x] Bitcoin whitepaper and Lightning Network paper processing (86.8/100 & 88.5/100 quality scores)
-- [x] Production-ready scripts architecture with proper error handling
+- [x] Document quality assessment framework (86.8-88.5/100 scores)
+- [x] **Modular architecture implementation** (fine_tune/ + rag_test/ + [planned]vllm/)
+- [x] **GPT-OSS-20B LoRA fine-tuning completed** (1.65 hours, 122MB weights)
+- [x] **Training data processing completed** (18,719 training samples + 2,335 validation samples)
+- [x] **pyproject.toml environment configuration fixed** (independent dependency management for both modules)
 
-### 🔄 Parallel Development Tracks
+### 🔄 Current Development Status
 
-#### Track A: RAG Foundation 🏗️
-- [x] Document processing pipeline (PDF → Markdown) ✅
-- [ ] Document chunking and semantic segmentation
-- [ ] ChromaDB vector database implementation
-- [ ] Sentence-transformers embedding system
-- [ ] RAG retrieval and context fusion
-- [ ] Bitcoin.org and Wiki content collection
-- [ ] Basic Gradio frontend for RAG validation
+#### ✅ fine_tune/ Module - LLM Fine-tuning
+- [x] ✅ Dataset download and preprocessing completed
+- [x] ✅ GPT-OSS-20B LoRA training completed (3 epochs, loss 1.32→1.25)
+- [x] ✅ Model weights saved (checkpoints/adapter_model.safetensors)
+- [ ] 🔄 Model quality evaluation and inference testing
 
-#### Track B: Model Intelligence 🧠
-- [ ] HuggingFace Bitcoin datasets collection (tahamajs)
-- [ ] Dataset preprocessing and quality validation
-- [ ] GPT-OSS-20B LoRA fine-tuning preparation
-- [ ] Training pipeline setup on single RTX 5090
-- [ ] vLLM deployment configuration and optimization
+#### ✅ rag_test/ Module - RAG Knowledge System
+- [x] ✅ Document processing pipeline (PDF → Markdown)
+- [x] ✅ Granite-docling integration completed
+- [ ] 🔄 Document chunking and semantic segmentation
+- [ ] ⏸️ ChromaDB vector database implementation
+- [ ] ⏸️ Sentence-transformers embedding system
+
+#### 🔄 [Planned] vllm/ Module - Inference Service
+- [ ] 🔄 vLLM deployment configuration (LoRA weights loading)
+- [ ] ⏸️ Module integration API design
+- [ ] ⏸️ Production environment deployment optimization
 
 ### Stage 3: System Integration 🔗
 - [ ] RAG + Fine-tuned model integration testing

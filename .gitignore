@@ -141,3 +141,9 @@ logs/processing/
 MiloMusic.txt
 prospect.txt
 AboutMe.txt
+
+# ignore remote_updates
+remote_updates/
+
+# ignore backup files
+*.backup

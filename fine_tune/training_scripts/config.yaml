@@ -1,0 +1,67 @@
+# Milo Bitcoin Fine-tuning Configuration
+# RTX 5090优化配置文件
+
+# 模型配置
+model_name: "openai/gpt-oss-20b"  # 真正的GPT-OSS-20B (21B参数)
+max_seq_length: 2048
+dtype: null  # 自动选择
+load_in_4bit: true
+
+# LoRA配置 (32GB VRAM优化)
+lora_r: 64
+lora_alpha: 128  # 2*r配比
+lora_dropout: 0.1
+target_modules: ["q_proj", "k_proj", "v_proj", "o_proj"]  # GPT-OSS-20B attention模块
+lora_bias: "none"
+task_type: "CAUSAL_LM"
+
+# 训练参数 (保守配置)
+per_device_train_batch_size: 4
+per_device_eval_batch_size: 4
+gradient_accumulation_steps: 8  # 有效批次=32
+learning_rate: 2.0e-4
+num_train_epochs: 3
+max_steps: -1
+warmup_steps: 100
+weight_decay: 0.01
+
+# 内存优化
+gradient_checkpointing: true
+optim: "adamw_8bit"
+fp16: false  # 自动选择fp16/bf16
+bf16: true   # RTX 5090支持bf16
+dataloader_pin_memory: false
+dataloader_num_workers: 4
+
+# 监控和保存
+eval_steps: 100
+save_steps: 200
+logging_steps: 10
+evaluation_strategy: "steps"
+save_strategy: "steps"
+load_best_model_at_end: true
+metric_for_best_model: "eval_loss"
+greater_is_better: false
+save_total_limit: 3
+
+# Wandb配置
+report_to: "wandb"
+run_name: "milo-bitcoin-unsloth"
+
+# 高级配置 (如需更激进的训练)
+# 解锁这些配置可以更充分利用32GB VRAM
+advanced:
+  # 更大批次配置
+  large_batch:
+    per_device_train_batch_size: 8
+    gradient_accumulation_steps: 4
+
+  # 更高LoRA rank
+  high_rank:
+    lora_r: 128
+    lora_alpha: 256
+
+  # 更长序列
+  long_sequence:
+    max_seq_length: 4096
+    per_device_train_batch_size: 2
