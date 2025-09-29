@@ -2,81 +2,81 @@
 
 > Track B: LLM Intelligence - Fine-tuning GPT-OSS-20B for professional Bitcoin quantitative analysis
 
-## 🏗️ 模块化架构
+## 🏗️ Modular Architecture
 
-本项目采用模块化设计，分为三个独立模块：
+This project adopts a modular design with three independent modules:
 
-### 📊 当前模块状态
-- ✅ **fine_tune/** - LLM微调模块 (Python 3.11)
-  - 状态：✅ 训练完成，122MB LoRA权重已保存
-  - 依赖：unsloth 2025.9.9 + pytorch 2.8.0+cu128
+### 📊 Current Module Status
+- ✅ **fine_tune/** - LLM Fine-tuning Module (Python 3.11)
+  - Status: ✅ Training completed, 122MB LoRA weights saved
+  - Dependencies: unsloth 2025.9.9 + pytorch 2.8.0+cu128
 
-- ✅ **rag_test/** - RAG知识系统 (Python 3.10)
-  - 状态：✅ granite-docling集成完成，文档处理pipeline就绪
-  - 依赖：docling + granite + embedding模型
+- ✅ **rag_test/** - RAG Knowledge System (Python 3.10)
+  - Status: ✅ granite-docling integration complete, document processing pipeline ready
+  - Dependencies: docling + granite + embedding models
 
-- 🔄 **[计划] vllm/** - 推理服务模块
-  - 状态：下一步开发目标
-  - 依赖：vllm + fastapi + 模型部署工具
+- 🔄 **[Planned] vllm/** - Inference Service Module
+  - Status: Next development target
+  - Dependencies: vllm + fastapi + model deployment tools
 
-### 🔗 模块协作流程
+### 🔗 Module Collaboration Flow
 ```
-fine_tune (LoRA权重) → vllm (推理服务) ← rag_test (知识检索)
+fine_tune (LoRA weights) → vllm (inference service) ← rag_test (knowledge retrieval)
                             ↓
-                    统一JSON格式输出
+                    Unified JSON output format
 ```
 
-## 🎯 目标
+## 🎯 Objective
 
-将GPT-OSS-20B微调为专业的Bitcoin量化分析师，输出结构化的JSON格式交易建议。
+Fine-tune GPT-OSS-20B into a professional Bitcoin quantitative analyst that outputs structured JSON-formatted trading recommendations.
 
-## 🏗️ 目录结构
+## 🏗️ Directory Structure
 
 ```
 fine_tune/
-├── pyproject.toml              # RTX 5090专用环境配置
-├── README.md                   # 本文件
-├── data_preparation/           # 数据预处理
-│   ├── download_datasets.py    # 下载HuggingFace数据集
-│   ├── data_formatter.py       # 统一数据格式
-│   └── data_mixer.py           # 90%-7%-3%数据混合
-├── training_scripts/           # 训练脚本
-│   ├── unsloth_trainer.py      # 主训练脚本
-│   ├── config.yaml             # 训练配置
-│   └── monitor.py              # 训练监控
-├── model_export/               # 模型导出
-│   ├── export_for_vllm.py      # 导出vLLM兼容格式
-│   └── model_validator.py      # 模型验证
-├── configs/                    # 配置文件
-├── logs/                       # 训练日志
-└── checkpoints/                # 模型检查点
+├── pyproject.toml              # RTX 5090 environment configuration
+├── README.md                   # This file
+├── data_preparation/           # Data preprocessing
+│   ├── download_datasets.py    # Download HuggingFace datasets
+│   ├── data_formatter.py       # Unified data formatting
+│   └── data_mixer.py           # 90%-7%-3% data mixing
+├── training_scripts/           # Training scripts
+│   ├── unsloth_trainer.py      # Main training script
+│   ├── config.yaml             # Training configuration
+│   └── monitor.py              # Training monitoring
+├── model_export/               # Model export
+│   ├── export_for_vllm.py      # Export vLLM compatible format
+│   └── model_validator.py      # Model validation
+├── configs/                    # Configuration files
+├── logs/                       # Training logs
+└── checkpoints/                # Model checkpoints
 ```
 
-## 🚀 快速开始
+## 🚀 Quick Start
 
-### 1. 安装Fine-tune模块依赖
+### 1. Install Fine-tune Module Dependencies
 
 ```bash
-# 设置RTX 5090环境变量
+# Set RTX 5090 environment variables
 export TORCH_CUDA_ARCH_LIST="12.0"
 export CUDA_VISIBLE_DEVICES=0
 
-# LLM微调模块 (本模块)
+# LLM fine-tuning module (this module)
 cd fine_tune
 source .venv/bin/activate
-uv sync  # 安装微调相关依赖 (unsloth + pytorch + transformers)
+uv sync  # Install fine-tuning dependencies (unsloth + pytorch + transformers)
 ```
 
-### 2. 安装RAG模块依赖 (并行开发)
+### 2. Install RAG Module Dependencies (Parallel Development)
 
 ```bash
-# RAG知识系统模块
+# RAG knowledge system module
 cd rag_test
 source .venv/bin/activate
-uv sync  # 安装RAG相关依赖 (granite-docling + embedding)
+uv sync  # Install RAG dependencies (granite-docling + embedding)
 ```
 
-### 3. 验证RTX 5090支持
+### 3. Verify RTX 5090 Support
 
 ```bash
 python -c "
@@ -88,7 +88,7 @@ print(f'Memory: {torch.cuda.get_device_properties(0).total_memory/1e9:.1f}GB')
 "
 ```
 
-预期输出：
+Expected output:
 ```
 CUDA Available: True
 Device Name: NVIDIA GeForce RTX 5090
@@ -96,44 +96,44 @@ Device Capability: (12, 0)
 Memory: 32.6GB
 ```
 
-### 4. 数据准备 (✅ 已完成)
+### 4. Data Preparation (✅ Completed)
 
 ```bash
-# ✅ 数据集已下载并预处理完成
-# final_data/ 目录包含:
-# - train.jsonl: 6,239样本 (85% train split)
-# - validation.jsonl: 734样本 (10% validation split)
-# - test.jsonl: 368样本 (5% test split)
-# - Total: 7,341样本
+# ✅ Dataset downloaded and preprocessed
+# final_data/ directory contains:
+# - train.jsonl: 6,239 samples (85% train split)
+# - validation.jsonl: 734 samples (10% validation split)
+# - test.jsonl: 368 samples (5% test split)
+# - Total: 7,341 samples
 ```
 
-### 5. 微调训练 (✅ 已完成)
+### 5. Fine-tuning Training (✅ Completed)
 
 ```bash
-# ✅ 训练已完成 - 使用以下脚本进行的训练
+# ✅ Training completed - using the following script
 python training_scripts/simple_trainer.py
 
-# ✅ 训练结果:
-# - 训练时间: 1.65小时 (3 epochs)
-# - LoRA权重: 122MB (checkpoints/adapter_model.safetensors)
-# - 损失收敛: 1.32 → 1.25
-# - WandB监控: 已记录完整训练过程
+# ✅ Training results:
+# - Training time: 1.65 hours (3 epochs)
+# - LoRA weights: 122MB (checkpoints/adapter_model.safetensors)
+# - Loss convergence: 1.32 → 1.25
+# - WandB monitoring: Complete training process recorded
 ```
 
-## 📊 数据集策略
+## 📊 Dataset Strategy
 
-基于session log的分析结果：
+Based on session log analysis results:
 
-### 选定数据集
-1. **bitcoin-llm-finetuning-dataset_new**: 2,301样本 (99.3%高质量)
-2. **bitcoin-sllm-instruct_v2**: 4,290样本 (99.9%高质量)
+### Selected Datasets
+1. **bitcoin-llm-finetuning-dataset_new**: 2,301 samples (99.3% high quality)
+2. **bitcoin-sllm-instruct_v2**: 4,290 samples (99.9% high quality)
 
-### 数据混合比例
-- **90% Bitcoin专业数据**: 6,607样本 - 核心专业能力
-- **7% 数学推理数据**: 514样本 - 计算能力保持
-- **3% 逻辑推理数据**: 220样本 - 基础推理能力
+### Data Mix Ratio
+- **90% Bitcoin professional data**: 6,607 samples - Core professional capability
+- **7% Math reasoning data**: 514 samples - Computational ability preservation
+- **3% Logic reasoning data**: 220 samples - Basic reasoning capability
 
-### 目标输出格式
+### Target Output Format
 ```json
 {
   "action": "BUY|SELL|HOLD",
@@ -142,40 +142,40 @@ python training_scripts/simple_trainer.py
   "stop_loss": 105200.00,
   "take_profit": 116800.00,
   "forecast_10d": [109800, 111200, ...],
-  "analysis": "技术面分析文本",
+  "analysis": "Technical analysis text",
   "risk_score": 0.31,
   "technical_indicators": {...}
 }
 ```
 
-## ⚙️ 训练配置
+## ⚙️ Training Configuration
 
-### 实际训练配置 (已验证成功)
+### Actual Training Configuration (Verified Successful)
 ```yaml
-# ✅ 成功使用的配置
-model_name: "openai/gpt-oss-20b"  # 实际使用模型
+# ✅ Successfully used configuration
+model_name: "openai/gpt-oss-20b"  # Actual model used
 max_seq_length: 2048
 
-# LoRA参数 (实际成功配置)
+# LoRA parameters (actual successful configuration)
 lora_r: 64                    # rank
-lora_alpha: 128               # 2*r配比
+lora_alpha: 128               # 2*r ratio
 lora_dropout: 0.1
 target_modules: ["q_proj", "k_proj", "v_proj", "o_proj"]
 
-# 训练参数 (实际使用)
+# Training parameters (actually used)
 per_device_train_batch_size: 4
 gradient_accumulation_steps: 8
-learning_rate: 2e-4           # 成功的学习率
+learning_rate: 2e-4           # Successful learning rate
 num_train_epochs: 3
 warmup_steps: 100
 
-# 内存优化
-gradient_checkpointing: "unsloth"  # Unsloth优化
+# Memory optimization
+gradient_checkpointing: "unsloth"  # Unsloth optimization
 optim: "adamw_8bit"
 fp16: true
 dataloader_pin_memory: false
 
-# 实际依赖版本
+# Actual dependency versions
 software_versions:
   unsloth: "2025.9.9"
   torch: "2.8.0+cu128"
@@ -183,76 +183,77 @@ software_versions:
   peft: "0.17.1"
 ```
 
-## 📈 实际性能结果
+## 📈 Actual Performance Results
 
-### ✅ 训练性能 (RTX 5090)
-- **总训练时间**: 1.65小时 (3 epochs) - 比预期快7倍！
-- **训练速度**: 3.145 samples/second
-- **检查点保存**: 每200步 (checkpoint-200, 400, 585)
-- **内存效率**: 优于预期，RTX 5090性能充足
+### ✅ Training Performance (RTX 5090)
+- **Total Training Time**: 1.65 hours (3 epochs) - 7x faster than expected!
+- **Training Speed**: 3.145 samples/second
+- **Checkpoint Saving**: Every 200 steps (checkpoint-200, 400, 585)
+- **Memory Efficiency**: Better than expected, RTX 5090 performance more than sufficient
 
-### ✅ 模型规模
-- **LoRA权重**: 122MB (vs 基础模型~20GB)
-- **压缩比**: 99.4% 参数减少
-- **checkpoints总大小**: 779MB (包含3个检查点)
-- **部署文件**: 仅需149MB (生产环境)
+### ✅ Model Size
+- **LoRA Weights**: 122MB (vs base model ~20GB)
+- **Compression Ratio**: 99.4% parameter reduction
+- **Total Checkpoints Size**: 779MB (includes 3 checkpoints)
+- **Deployment Files**: Only 149MB (production environment)
 
-## 🔗 与主框架集成
+## 🔗 Integration with Main Framework
 
-训练完成后，模型将集成到：
+After training completion, the model will be integrated into:
 ```
-ZJ_Volume/
-├── milo_bitcoin_main.py      # 主框架 - 替换TODO模型
-├── fine_tune/                # 本目录
-├── rag_system/               # RAG知识系统 (并行开发)
-└── integration/              # 集成部署
+Milo_Bitcoin/
+├── milo_bitcoin_main.py      # Main framework - replace TODO model
+├── fine_tune/                # This directory
+├── rag_test/                 # RAG knowledge system (parallel development)
+└── vllm/                     # Integration deployment (planned)
 ```
 
-## 🚨 故障排除
+## 🚨 Troubleshooting
 
-### 常见问题
+### Common Issues
 
-1. **sm_120不支持错误**
+1. **sm_120 Not Supported Error**
 ```bash
-# 确保使用CUDA 12.8，不是13.0
+# Ensure using CUDA 12.8, not 13.0
 pip install torch --extra-index-url https://download.pytorch.org/whl/cu128
 export TORCH_CUDA_ARCH_LIST="12.0"
 ```
 
-2. **内存不足**
+2. **Out of Memory**
 ```bash
-# 减少批次大小
+# Reduce batch size
 per_device_train_batch_size: 2
 gradient_accumulation_steps: 16
 ```
 
-3. **Unsloth安装问题**
+3. **Unsloth Installation Issues**
 ```bash
-# 重新安装
+# Reinstall
 pip uninstall unsloth -y
 pip install "unsloth[colab-new] @ git+https://github.com/unslothai/unsloth.git"
 ```
 
-## 📝 项目进度
+## 📝 Project Progress
 
-### ✅ 已完成任务
-1. ✅ 目录结构创建完成
-2. ✅ PyTorch sm_120兼容性验证 (CUDA 12.8 + RTX 5090)
-3. ✅ 训练环境配置完成 (pyproject.toml修复)
-4. ✅ 数据集下载和预处理 (7,341总样本: 6,239训练 + 734验证 + 368测试)
-5. ✅ GPT-OSS-20B LoRA微调训练 (122MB权重)
-6. ✅ 训练监控和检查点保存
+### ✅ Completed Tasks
+1. ✅ Directory structure created
+2. ✅ PyTorch sm_120 compatibility verified (CUDA 12.8 + RTX 5090)
+3. ✅ Training environment configured (pyproject.toml fixed)
+4. ✅ Dataset downloaded and preprocessed (7,341 total samples: 6,239 train + 734 val + 368 test)
+5. ✅ GPT-OSS-20B LoRA fine-tuning completed (122MB weights)
+6. ✅ Training monitoring and checkpoint saving
+7. ✅ Model published on HuggingFace: [HugMilo/milo-bitcoin-gpt-oss-20b-lora-v1](https://huggingface.co/HugMilo/milo-bitcoin-gpt-oss-20b-lora-v1)
 
-### 🔄 当前任务 (下一步)
-7. 🔄 **模型质量评估** - 推理测试和性能验证
-8. ⏸️ **vLLM部署配置** - 推理服务器搭建
-9. ⏸️ **与主框架集成** - 统一API接口设计
+### 🔄 Current Tasks (Next Steps)
+8. 🔄 **Model Quality Evaluation** - Inference testing and performance validation
+9. ⏸️ **vLLM Deployment Configuration** - Inference server setup
+10. ⏸️ **Integration with Main Framework** - Unified API interface design
 
-### 🎯 模块化集成规划
-- **fine_tune** (本模块): ✅ 训练完成
-- **rag_test**: ✅ 文档处理pipeline就绪
-- **vllm** (计划): 推理服务和两模块整合
+### 🎯 Modular Integration Plan
+- **fine_tune** (this module): ✅ Training completed
+- **rag_test**: ✅ Document processing pipeline ready
+- **vllm** (planned): Inference service and module integration
 
 ---
 
-**记住**: 这是并行开发的Track B (LLM微调)，与Track A (RAG系统)独立进行，最终在integration层汇合。🚀
+**Remember**: This is Track B (LLM Fine-tuning) of parallel development, independent from Track A (RAG System), converging at the integration layer. 🚀
