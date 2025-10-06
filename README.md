@@ -210,7 +210,7 @@ python milo_bitcoin_main.py
 ### Performance Metrics
 - **Data Quality**: 99%+ validated professional samples
 - **JSON Format Consistency**: 100% structured output
-- **Training Efficiency**: ✅ 1.65 hours on RTX 5090 (7x faster than expected!)
+- **Training Efficiency**: ✅ 1.65 hours on RTX 5090
 - **Inference Speed**: <2 seconds per analysis (RTX 5090)
 - **Model Size**: 122MB LoRA weights (vs base model ~20GB, 99.4% compression)
 - **Memory Requirements**: RTX 5090 32GB VRAM fully sufficient
